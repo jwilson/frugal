@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.views.generic import ListView
 
-from .models import Expense
+from .models import FixedAmount
 
 
-class ExpenseDetailsView(ListView):
-    model = Expense
-    template_name = 'expense_list.html'
+class FixedAmountDetailsView(ListView):
+    model = FixedAmount
+    template_name = 'money/fixed_amount_list.html'

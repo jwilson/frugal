@@ -3,21 +3,11 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from .models import Transaction, ScheduledTransaction, Account, DailyLedger, Expense, Income
+from .models import DailyLedger, FixedAmount
 
 
-@admin.register(Account)
-class AccountAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Expense)
-class ExpenseAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Income)
-class IncomeAdmin(admin.ModelAdmin):
+@admin.register(FixedAmount)
+class FixedAmountAdmin(admin.ModelAdmin):
     pass
 
 
