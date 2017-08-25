@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form action="." method="post">
+    {% include 'money/_forms/_select.html' with field=form.type %}
+    {% include 'money/_forms/_input.html' with field=form.amount %}
+  </form>
+{% endblock %}
