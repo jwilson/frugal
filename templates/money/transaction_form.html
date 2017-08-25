@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <form action="." method="post">
-    {% include 'money/_forms/_select.html' with field=form.type %}
-    {% include 'money/_forms/_input.html' with field=form.amount %}
-  </form>
+  <div class="row">
+    <div class="col-12">
+      <form action="." method="post">
+        {% include 'money/_forms/_select.html' with field=form.type %}
+        {% include 'money/_forms/_input.html' with field=form.amount %}
+      </form>
+    </div>
+  </div>
 {% endblock %}

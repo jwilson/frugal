@@ -1,5 +1,6 @@
 <div class="form-group">
-  <select class="form-control">
+  <label for="id_{{ field.name }}">{{ field.name|capfirst }}</label>
+  <select class="form-control" id="id_{{ field.name }}" name="{{ field.name }}">
     {% for opt in field.field.choices %}
     <option value="{{ opt.0 }}">{{ opt.1 }}</option>
     {% endfor %}
