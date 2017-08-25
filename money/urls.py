@@ -6,6 +6,6 @@ from django.conf.urls import url
 from .views import FixedAmountsView, TransactionCreateView
 
 urlpatterns = [
-    url(r'^transactions/add/$', TransactionCreateView.as_view(), name='transactions'),
+    url(r'^transactions/add/$', TransactionCreateView.as_view(), name='transaction_create'),
     url(r'^fixed-amounts/$', FixedAmountsView.as_view(), name='fixed_amounts')
 ]

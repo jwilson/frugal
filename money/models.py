@@ -37,15 +37,24 @@ TRANSACTION_TYPE = (
 class DailyLedgerQuerySet(models.QuerySet):
 
     def today(self):
-        return self.filter(Q(created_on=timezone.now().date()))
+        return self.filter(Q(created_on=timezone.now().date())).first()
 
 
 @python_2_unicode_compatible
 class DailyLedger(models.Model):
     created_on = models.DateField(auto_now_add=True)
 
+    objects = DailyLedgerQuerySet.as_manager()
+
     def __str__(self):
         return '{}'.format(self.created_on)
+
+    @classmethod
+    def start_day(self):
+        today = DailyLedger.objects.create()
+        daily_expenses = FixedAmount.objects.expenses().aggregate(total=Sum('daily'))
+        today.transactions.add(Transaction.object.create(amount=daily_expenses))
+        return
 
     def balance(self):
         return self.deposits - self.purchases - self.bills - self.withdrawls
@@ -75,10 +84,10 @@ class Transaction(models.Model):
     uuid = models.UUIDField(default=uuid4)
     type = models.CharField(max_length=1, choices=TRANSACTION_TYPE, default='1')
     amount = models.DecimalField(max_digits=7, decimal_places=2)
-    ledger = models.ForeignKey(DailyLedger, related_name='transactions')
+    ledger = models.ForeignKey(DailyLedger, related_name='transactions', blank=True, null=True)
 
     def __str__(self):
-        return ''
+        return '{} @ {}'.format(self.amount, self.ledger)
 
 
 class FixedAmountQuerySet(models.QuerySet):
