@@ -30,7 +30,7 @@ TRANSACTION_TYPE = (
     ('1', 'Purchase'),
     ('2', 'Bill'),
     ('3', 'Withdraw'),
-    ('4', 'Deposit')
+    ('4', 'Deposit'),
 )
 
 
@@ -52,9 +52,11 @@ class DailyLedger(models.Model):
     @classmethod
     def start_day(self):
         today = DailyLedger.objects.create()
-        daily_expenses = FixedAmount.objects.expenses().aggregate(total=Sum('daily'))
-        today.transactions.add(Transaction.object.create(amount=daily_expenses))
-        return
+        for expense in FixedAmount.objects.expenses():
+            today.transactions.add(Transaction.objects.create(amount=expense.daily, automatic=True, type='3'))
+        for income in FixedAmount.objects.income():
+            today.transactions.add(Transaction.objects.create(amount=income.daily, automatic=True, type='4'))
+        return today
 
     def balance(self):
         return self.deposits - self.purchases - self.bills - self.withdrawls
@@ -83,6 +85,7 @@ class DailyLedger(models.Model):
 class Transaction(models.Model):
     uuid = models.UUIDField(default=uuid4)
     type = models.CharField(max_length=1, choices=TRANSACTION_TYPE, default='1')
+    automatic = models.BooleanField(default=False)
     amount = models.DecimalField(max_digits=7, decimal_places=2)
     ledger = models.ForeignKey(DailyLedger, related_name='transactions', blank=True, null=True)
 

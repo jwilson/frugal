@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% blocktrans %}Create a new transaction{% endblocktrans %}{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      {% include "_widgets/_transaction.html" with form=form %}
+    </div>
+  </div>
+{% endblock %}
