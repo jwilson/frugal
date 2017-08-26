@@ -5,11 +5,9 @@
   <div class="row">
     <div class="col-12">
       {% if request.user.is_authenticated %}
-        {% trans "Today" as today_label %}
-        {% include "_widgets/_today.html" with data=today title=today_label button_label=today_label active="true" %}
+        {% include "_widgets/_today.html" with data=today %}
         <br />
-        {% trans "This Week" as this_week_label %}
-        {% include "_widgets/_this_week.html" with data=this_week title=this_week_label button_label=this_week_label %}
+        {% include "_widgets/_this_week.html" with data=this_week %}
       {% else %}
         {% include "_widgets/_login.html" %}
       {% endif %}

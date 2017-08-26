@@ -45,13 +45,15 @@
       </div>
     </div>
     <ul id="transactions" class="list-group list-group-flush d-none">
-      {% for tx in object_list %}
+      {% for daily_ledger_transactions in ledger.transactions %}
+      {% for tx in daily_ledger_transactions %}
       <li class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1">${% if tx.get_type_display == 'Withdraw' %}({{ tx.amount }}){% else %}{{ tx.amount }}{% endif %}</h5>
           <small>{% if tx.automatic %}{% trans "Automatic" %} {% endif %}{{ tx.get_type_display }}</small>
         </div>
       </li>
+      {% endfor %}
       {% endfor %}
     </ul>
   </div>

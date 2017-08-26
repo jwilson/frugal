@@ -18,12 +18,13 @@ class TransactionsListBaseView(ListView):
 
     def get_transaction_data(self):
         return {
-            'deposits': sum([tx.deposits for tx in self.get_queryset()]),
-            'withdraws': sum([tx.withdraws for tx in self.get_queryset()]),
-            'payments': sum([tx.payments for tx in self.get_queryset()]),
-            'purchases': sum([tx.purchases for tx in self.get_queryset()]),
-            'balance': sum([tx.balance for tx in self.get_queryset()]),
-            'difference': sum([tx.difference for tx in self.get_queryset()])
+            'deposits': sum([dl.deposits for dl in self.get_queryset()]),
+            'withdraws': sum([dl.withdraws for dl in self.get_queryset()]),
+            'payments': sum([dl.payments for dl in self.get_queryset()]),
+            'purchases': sum([dl.purchases for dl in self.get_queryset()]),
+            'balance': sum([dl.balance for dl in self.get_queryset()]),
+            'difference': sum([dl.difference for dl in self.get_queryset()]),
+            'transactions': [dl.transactions.all() for dl in self.get_queryset()]
         }
 
     def get_context_data(self, **kwargs):

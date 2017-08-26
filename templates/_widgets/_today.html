@@ -1,6 +1,15 @@
 {% extends "_widgets/_details.html" %}
 {% load i18n %}
-{% block add %}
+
+{% block details-title %}
+{% blocktrans %}Today{% endblocktrans %}
+{% endblock %}
+
+{% block details-button-label %}
+{% blocktrans %}Today{% endblocktrans %}
+{% endblock %}
+
+{% block details-add %}
 <a href="{% url "money:transactions_create" %}" class="btn btn-primary">
         <span class="oi oi-plus"></span> {% trans "Transaction" %}</a>
 {% endblock %}
