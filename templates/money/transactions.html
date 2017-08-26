@@ -20,22 +20,14 @@
       </h6>
       <br />
       <div class="row">
-        <div class="col-6 col-sm-3 text-center">
-          <span class="oi oi-arrow-circle-bottom"></span><br />
-          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Deposits" %} <br /></span>
-          <span class="amount">${{ ledger.deposits }}</span></div>
-        <div class="col-6 col-sm-3 text-center">
-          <span class="oi oi-arrow-circle-top"></span><br />
-          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Withdraws" %} <br /></span>
-          <span class="amount">${{ ledger.withdraws }}</span></div>
-        <div class="col-6 col-sm-3 text-center">
-          <span class="oi oi-calendar"></span><br />
-          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Payments" %} <br /></span>
-          <span class="amount">${{ ledger.payments }}</span></div>
-        <div class="col-6 col-sm-3 text-center">
-          <span class="oi oi-dollar"></span><br />
-          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Purchases" %} <br /></span>
-          <span class="amount">${{ ledger.purchases }}</span></div>
+        {% trans "Deposits" as deposits_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.deposits icon="arrow-circle-bottom" label=deposits_label %}
+        {% trans "Withdraws" as withdraws_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.withdraws icon="arrow-circle-top" label=withdraws_label %}
+        {% trans "Payments" as payments_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.payments icon="calendar" label=payments_label %}
+        {% trans "Purchases" as purchases_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.purchases icon="dollar" label=purchases_label %}
       </div>
       <br />
       <div class="row">
