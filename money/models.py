@@ -11,6 +11,8 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from .utils import week_range
+
 FREQUENCY = (
     ('1', _('Weekly')),
     ('2', _('Bi-Weekly')),
@@ -36,12 +38,22 @@ TRANSACTION_TYPE = (
 
 class DailyLedgerQuerySet(models.QuerySet):
 
-    def today(self):
-        return self.filter(Q(created_on=timezone.now().date())).first()
+    def today(self, user=None):
+        ledgers = self.filter(Q(created_on=timezone.now().date()))
+        if user:
+            ledgers = ledgers.filter(Q(owner=user))
+        return ledgers.first()
+
+    def this_week(self, user=None):
+        ledgers = self.filter(Q(created_on=timezone.now().date()))
+        if user:
+            ledgers = ledgers.filter(Q(owner=user))
+        return ledgers.filter(created_on__range=week_range(timezone.now()))
 
 
 @python_2_unicode_compatible
 class DailyLedger(models.Model):
+    owner = models.ForeignKey(User, related_name='daily_ledgers')
     created_on = models.DateField(auto_now_add=True)
 
     objects = DailyLedgerQuerySet.as_manager()
@@ -50,7 +62,7 @@ class DailyLedger(models.Model):
         return '{}'.format(self.created_on)
 
     @classmethod
-    def start_day(self):
+    def start_day(cls):
         today = DailyLedger.objects.create()
         for expense in FixedAmount.objects.expenses():
             today.transactions.add(Transaction.objects.create(amount=expense.daily, automatic=True, type='3'))
@@ -96,6 +108,7 @@ class DailyLedger(models.Model):
 @python_2_unicode_compatible
 class Transaction(models.Model):
     uuid = models.UUIDField(default=uuid4)
+    owner = models.ForeignKey(User, related_name='transactions')
     type = models.CharField(max_length=1, choices=TRANSACTION_TYPE, default='1')
     automatic = models.BooleanField(default=False)
     amount = models.DecimalField(max_digits=7, decimal_places=2)

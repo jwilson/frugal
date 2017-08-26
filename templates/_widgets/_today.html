@@ -1,16 +1,6 @@
+{% extends "_widgets/_details.html" %}
 {% load i18n %}
-<div class="card">
-  <div class="card-body">
-    <h4 class="card-title">Today</h4>
-    <h6 class="card-subtitle mb-2 text-muted">{% now "l, F \t\h\e jS, o" %}</h6>
-    <div class="card-text">{{ today.transactions }} Transactions</div>
-    <div class="card-text text-danger">${{ today.balance }}</div>
-    <br />
-    <div class="text-center">
-      <a href="{% url "money:transactions" %}" class="btn btn-info">
-        <span class="oi oi-graph"></span> {% blocktrans %}Today{%  endblocktrans %}</a>
-      <a href="{% url "money:transactions_create" %}" class="btn btn-primary">
+{% block add %}
+<a href="{% url "money:transactions_create" %}" class="btn btn-primary">
         <span class="oi oi-plus"></span> {% trans "Transaction" %}</a>
-    </div>
-  </div>
-</div>
+{% endblock %}

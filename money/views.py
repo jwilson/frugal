@@ -13,17 +13,37 @@ class FixedAmountsView(ListView):
     template_name = 'money/fixed_amount_list.html'
 
 
-class TodaysTransactionsListView(ListView):
+class TransactionsListBaseView(ListView):
     model = Transaction
+
+    def get_transaction_data(self):
+        return {
+            'deposits': sum([tx.deposits for tx in self.get_queryset()]),
+            'withdraws': sum([tx.withdraws for tx in self.get_queryset()]),
+            'payments': sum([tx.payments for tx in self.get_queryset()]),
+            'purchases': sum([tx.purchases for tx in self.get_queryset()]),
+            'balance': sum([tx.balance for tx in self.get_queryset()]),
+            'difference': sum([tx.difference for tx in self.get_queryset()])
+        }
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TransactionsListBaseView, self).get_context_data(**kwargs)
+        ctx['ledger'] = self.get_transaction_data()
+        return ctx
+
+
+class ThisWeeksTransactionsListView(TransactionsListBaseView):
     template_name = 'money/transactions.html'
 
     def get_queryset(self):
-        return DailyLedger.objects.today().transactions.all()
+        return DailyLedger.objects.this_week(self.request.user)
 
-    def get_context_data(self, **kwargs):
-        ctx = super(TodaysTransactionsListView, self).get_context_data(**kwargs)
-        ctx['ledger'] = DailyLedger.objects.today()
-        return ctx
+
+class TodaysTransactionsListView(TransactionsListBaseView):
+    template_name = 'money/transactions.html'
+
+    def get_queryset(self):
+        return [DailyLedger.objects.today()]
 
 
 class TransactionCreateView(CreateView):
@@ -36,5 +56,6 @@ class TransactionCreateView(CreateView):
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.ledger = DailyLedger.objects.today() or DailyLedger.start_day()
+        instance.owner = self.request.uset
         instance.save()
         return super(TransactionCreateView, self).form_valid(form)
