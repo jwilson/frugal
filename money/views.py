@@ -13,12 +13,25 @@ class FixedAmountsView(ListView):
     template_name = 'money/fixed_amount_list.html'
 
 
+class TodaysTransactionsListView(ListView):
+    model = Transaction
+    template_name = 'money/transactions.html'
+
+    def get_queryset(self):
+        return DailyLedger.objects.today().transactions.all()
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TodaysTransactionsListView, self).get_context_data(**kwargs)
+        ctx['ledger'] = DailyLedger.objects.today()
+        return ctx
+
+
 class TransactionCreateView(CreateView):
     model = Transaction
     form = TransactionForm
     fields = ('type', 'amount')
     success_url = reverse_lazy('home')
-    template_name = 'money/transaction_create.html'
+    template_name = 'money/transactions_create.html'
 
     def form_valid(self, form):
         instance = form.save(commit=False)

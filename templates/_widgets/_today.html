@@ -1,0 +1,14 @@
+{% load i18n %}
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Today</h4>
+    <h6 class="card-subtitle mb-2 text-muted">{% now "l, F \t\h\e jS, o" %}</h6>
+    <div class="card-text">{{ today.transactions }} Transactions</div>
+    <div class="card-text text-danger">${{ today.balance }}</div>
+    <br />
+    <a href="{% url "money:transactions" %}" class="btn btn-info">
+      {% blocktrans %}Today{%  endblocktrans %}</a>
+    <a href="{% url "money:transactions_create" %}" class="btn btn-primary">
+      {% blocktrans %}Add a new transaction{% endblocktrans %}</a>
+  </div>
+</div>

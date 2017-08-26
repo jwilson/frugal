@@ -73,7 +73,7 @@ class DailyLedger(models.Model):
         return self._sum(self.transactions.filter(type='2'))
 
     @property
-    def withdrawls(self):
+    def withdraws(self):
         return self._sum(self.transactions.filter(type='3'))
 
     @property

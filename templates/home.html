@@ -1,21 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block tite %}{% trans "Home" %}{% endblock %}
+{% block title %}{% trans "Home" %}{% endblock %}
 {% block content %}
-  {% if not request.user.is_authenticated %}
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">Today</h4>
-        <h6 class="card-subtitle mb-2 text-muted">Dec 1, 2016</h6>
-        <div class="card-text">{{ today.transactions }} Transactions</div>
-        <div class="card-text text-danger">${{ today.balance }}</div>
-        <br />
-        <a href="{# url "monday:transactions_today" #}" class="card-link">{% blocktrans %}See today{%  endblocktrans %}</a>
-        <a href="{% url "money:transaction_create" %}" class="card-link">
-          {% blocktrans %}Add a new transaction{% endblocktrans %}</a>
-      </div>
+  <div class="row">
+    <div class="col-12">
+      {% if request.user.is_authenticated %}
+        {% include "_widgets/_today.html" with today=today %}
+      {% else %}
+        {% include "_widgets/_login.html" %}
+      {% endif %}
     </div>
-  {% else %}
-
-  {% endif %}
+  </div>
 {% endblock %}

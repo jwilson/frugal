@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% blocktrans %}Today's Transactions{% endblocktrans %}{% endblock %}
+{% block extrahead %}
+  <style>
+    .amount {
+      font-size:1.0em;
+      font-weight:bold;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{% now "F j, o" %}</h4>
+      <div class="row">
+        <div class="col-6 col-sm-3 text-center">
+          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Deposits" %} </span><span class="oi oi-arrow-circle-bottom"></span>
+          <br /><span class="amount">${{ ledger.deposits }}</span></div>
+        <div class="col-6 col-sm-3 text-center">
+          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Withdraws" %} </span><span class="oi oi-arrow-circle-top"></span>
+          <br /><span class="amount">${{ ledger.withdraws }}</span></div>
+        <div class="col-6 col-sm-3 text-center">
+          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Bills" %} </span><span class="oi oi-calendar"></span>
+          <br /><span class="amount">${{ ledger.bills }}</span></div>
+        <div class="col-6 col-sm-3 text-center">
+          <span class="d-none d-sm-inline d-md-inline d-lg-inline d-xl-inline">{% trans "Purchases" %} </span><span class="oi oi-dollar"></span>
+          <br /><span class="amount">${{ ledger.purchases }}</span></div>
+      </div>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for tx in object_list %}
+      <li class="list-group-item flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">${% if tx.get_type_display == 'Withdraw' %}({{ tx.amount }}){% else %}{{ tx.amount }}{% endif %}</h5>
+          <small>{% if tx.automatic %}{% trans "Automatic" %} {% endif %}{{ tx.get_type_display }}</small>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
