@@ -58,18 +58,19 @@ class DailyLedger(models.Model):
             today.transactions.add(Transaction.objects.create(amount=income.daily, automatic=True, type='4'))
         return today
 
-    def balance(self):
-        return self.deposits - self.purchases - self.bills - self.withdrawls
-
     def _sum(self, queryset):
         return queryset.aggregate(total=Sum('amount'))['total'] or 0
+
+    @property
+    def balance(self):
+        return self.deposits - self.purchases - self.payments - self.withdraws
 
     @property
     def purchases(self):
         return self._sum(self.transactions.filter(type='1'))
 
     @property
-    def bills(self):
+    def payments(self):
         return self._sum(self.transactions.filter(type='2'))
 
     @property
@@ -79,6 +80,17 @@ class DailyLedger(models.Model):
     @property
     def deposits(self):
         return self._sum(self.transactions.filter(type='4'))
+
+    @property
+    def starting_balance(self):
+        automatic = self.transactions.filter(automatic=True)
+        expenses = self._sum(automatic.filter(type='3'))
+        incomes = self._sum(automatic.filter(type='4'))
+        return incomes - expenses
+
+    @property
+    def difference(self):
+        return self.balance - self.starting_balance
 
 
 @python_2_unicode_compatible

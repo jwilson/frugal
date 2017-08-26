@@ -4,9 +4,8 @@
     <form action="{{ action|default:"." }}" method="post">
       {% csrf_token %}
       {{ form.ledge }}
-      {% include "_forms/_hidden.html" with field=form.ledger %}
       {% include "_forms/_select.html" with field=form.type size="lg" %}
-      {% include "_forms/_input.html" with field=form.amount size="lg" %}
+      {% include "_forms/_input.html" with field=form.amount size="lg" focus="true" %}
       {% trans 'Spend It' as spend %}
       <div class="float-right">
         {% include "_forms/_button.html" with type="danger" icon="" text=spend size="lg" %}

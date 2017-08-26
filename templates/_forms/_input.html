@@ -3,5 +3,6 @@
   <label class="form-control-label" for="id_{{ field.name }}">{{ field.name|capfirst }}</label>
   <input type="{{ type|default:"text" }}" class="form-control{%  if size %} form-control-{{ size }}{% endif %}"
          id="id_{{ field.name }}" name="{{ field.name }}"
-         placeholder="{% blocktrans with name=field.name %}Enter the {{ name }}...{% endblocktrans %}"/>
+         placeholder="{% blocktrans with name=field.name %}Enter the {{ name }}...{% endblocktrans %}"
+         {% if focus %}autofocus{% endif %}/>
 </div>
