@@ -33,6 +33,13 @@ class TransactionsListBaseView(ListView):
         return ctx
 
 
+class ThisMonthsTransactionsListView(TransactionsListBaseView):
+    template_name = 'money/transactions.html'
+
+    def get_queryset(self):
+        return DailyLedger.objects.this_month(self.request.user)
+
+
 class ThisWeeksTransactionsListView(TransactionsListBaseView):
     template_name = 'money/transactions.html'
 
@@ -56,7 +63,7 @@ class TransactionCreateView(CreateView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        instance.ledger = DailyLedger.objects.today() or DailyLedger.start_day()
-        instance.owner = self.request.uset
+        instance.ledger = DailyLedger.objects.today() or DailyLedger.start_day(self.request.user)
+        instance.owner = self.request.user
         instance.save()
         return super(TransactionCreateView, self).form_valid(form)

@@ -2,13 +2,13 @@
 {% load i18n %}
 
 {% block details-title %}
-{% blocktrans %}This Week{% endblocktrans %}
+{% blocktrans %}This Month{% endblocktrans %}
 {% endblock %}
 
 {% block details-button-label %}
-{% blocktrans %}Week{% endblocktrans %}
+{% blocktrans %}Month{% endblocktrans %}
 {% endblock %}
 
 {% block details-view-url %}
-  {% url "money:transactions_weekly" %}
+  {% url "money:transactions_monthly" %}
 {% endblock %}

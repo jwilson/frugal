@@ -8,6 +8,8 @@
         {% include "_widgets/_today.html" with data=today %}
         <br />
         {% include "_widgets/_this_week.html" with data=this_week %}
+        <br />
+        {% include "_widgets/_this_month.html" with data=this_month %}
       {% else %}
         {% include "_widgets/_login.html" %}
       {% endif %}

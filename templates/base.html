@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -39,15 +40,11 @@
   </head>
   <body>
     <div class="container-fluid">
-      <h2 class="text-center"><span class="oi oi-task"></span> frugal yet?</h2>
+      <h2 class="text-center">
+        <a class="btn btn-link float-right" href=""><span class="oi oi-cog"></span></a>
+        <span class="oi oi-task"></span> {% blocktrans %}frugal yet?{% endblocktrans %}</h2>
       {% block content %}
       {% endblock %}
-      <br />
-      <div class="row">
-        <div class="col-12">
-          <a class="btn btn-link float-right" href=""><span class="oi oi-cog"></span></a>
-        </div>
-      </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

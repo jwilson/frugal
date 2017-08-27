@@ -9,6 +9,10 @@
 {% blocktrans %}Today{% endblocktrans %}
 {% endblock %}
 
+{% block details-view-url %}
+  {% url "money:transactions_today" %}
+{% endblock %}
+
 {% block details-add %}
 <a href="{% url "money:transactions_create" %}" class="btn btn-primary">
         <span class="oi oi-plus"></span> {% trans "Transaction" %}</a>

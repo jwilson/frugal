@@ -7,7 +7,7 @@
     <div class="card-text text-danger">${{ data.balance }}</div>
     <br />
     <div class="text-center">
-      <a href="{% url "money:transactions" %}" class="btn btn-info">
+      <a href="{% block details-view-url %}{% endblock %}" class="btn btn-info">
         <span class="oi oi-graph"></span> {% block details-button-label %}{% endblock %}</a>
       {% block details-add %}{% endblock %}
     </div>

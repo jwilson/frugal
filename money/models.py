@@ -38,17 +38,24 @@ TRANSACTION_TYPE = (
 
 class DailyLedgerQuerySet(models.QuerySet):
 
+    def this_month(self, user=None):
+        now = timezone.now()
+        ledgers = self.filter(created_on__month=now.month)
+        if user:
+            ledgers = ledgers.filter(Q(owner=user))
+        return ledgers
+
+    def this_week(self, user=None):
+        ledgers = self.filter(created_on__range=week_range(timezone.now()))
+        if user:
+            ledgers = ledgers.filter(Q(owner=user))
+        return ledgers
+
     def today(self, user=None):
         ledgers = self.filter(Q(created_on=timezone.now().date()))
         if user:
             ledgers = ledgers.filter(Q(owner=user))
         return ledgers.first()
-
-    def this_week(self, user=None):
-        ledgers = self.filter(Q(created_on=timezone.now().date()))
-        if user:
-            ledgers = ledgers.filter(Q(owner=user))
-        return ledgers.filter(created_on__range=week_range(timezone.now()))
 
 
 @python_2_unicode_compatible
@@ -62,12 +69,14 @@ class DailyLedger(models.Model):
         return '{}'.format(self.created_on)
 
     @classmethod
-    def start_day(cls):
-        today = DailyLedger.objects.create()
+    def start_day(cls, owner):
+        today = DailyLedger.objects.create(owner=owner)
         for expense in FixedAmount.objects.expenses():
-            today.transactions.add(Transaction.objects.create(amount=expense.daily, automatic=True, type='3'))
+            today.transactions.add(Transaction.objects.create(owner=owner, amount=expense.daily,
+                                                              automatic=True, type='3'))
         for income in FixedAmount.objects.income():
-            today.transactions.add(Transaction.objects.create(amount=income.daily, automatic=True, type='4'))
+            today.transactions.add(Transaction.objects.create(owner=owner, amount=income.daily,
+                                                              automatic=True, type='4'))
         return today
 
     def _sum(self, queryset):

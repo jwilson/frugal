@@ -15,8 +15,9 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(HomeView, self).get_context_data(**kwargs)
-        today = DailyLedger.objects.today() or DailyLedger.start_day()
+        today = DailyLedger.objects.today() or DailyLedger.start_day(self.request.user)
         this_week = DailyLedger.objects.this_week(self.request.user)
+        this_month = DailyLedger.objects.this_week(self.request.user)
         ctx['today'] = {
             'balance': today.balance,
             'transactions': today.transactions.count(),
@@ -25,6 +26,11 @@ class HomeView(TemplateView):
         ctx['this_week'] = {
             'balance': sum([l.balance for l in this_week]),
             'transactions': sum([l.transactions.count() for l in this_week]),
+            'date': ''
+        }
+        ctx['this_month'] = {
+            'balance': sum([l.balance for l in this_month]),
+            'transactions': sum([l.transactions.count() for l in this_month]),
             'date': ''
         }
         return ctx
