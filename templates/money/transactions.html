@@ -64,7 +64,7 @@
     };
 
     document.addEventListener("DOMContentLoaded", _ => {
-      const view = document.querySelector('#view');
+      let view = document.querySelector('#view');
       view.addEventListener('click', (e) => {
         e.preventDefault();
         toggleTransactions();

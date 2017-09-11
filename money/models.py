@@ -38,30 +38,28 @@ TRANSACTION_TYPE = (
 
 class DailyLedgerQuerySet(models.QuerySet):
 
-    def this_month(self, user=None):
-        now = timezone.now()
-        ledgers = self.filter(created_on__month=now.month)
+    def _filter(self, q, user=None):
+        ledgers = self.filter(q)
         if user:
             ledgers = ledgers.filter(Q(owner=user))
         return ledgers
+
+    def this_month(self, user=None):
+        return self._filter(Q(created_on__month=timezone.now().month), user=user)
 
     def this_week(self, user=None):
-        ledgers = self.filter(created_on__range=week_range(timezone.now()))
-        if user:
-            ledgers = ledgers.filter(Q(owner=user))
-        return ledgers
+        return self._filter(Q(created_on__range=week_range(timezone.now())), user=user)
 
     def today(self, user=None):
-        ledgers = self.filter(Q(created_on=timezone.now().date()))
-        if user:
-            ledgers = ledgers.filter(Q(owner=user))
-        return ledgers.first()
+        return self._filter(Q(created_on=timezone.now().date()), user=user)
 
 
 @python_2_unicode_compatible
 class DailyLedger(models.Model):
     owner = models.ForeignKey(User, related_name='daily_ledgers')
     created_on = models.DateField(auto_now_add=True)
+    starting_balance = models.IntegerField(blank=True, null=True)
+    ending_balance = models.IntegerField(blank=True, null=True)
 
     objects = DailyLedgerQuerySet.as_manager()
 
@@ -77,7 +75,23 @@ class DailyLedger(models.Model):
         for income in FixedAmount.objects.income():
             today.transactions.add(Transaction.objects.create(owner=owner, amount=income.daily,
                                                               automatic=True, type='4'))
+
+        today.starting_balance = self._get_starting_balance()
+        today.save()
+
         return today
+
+    @classmethod
+    def ending_day_balance(cls, owner):
+        today = DailyLedger.objects.today(owner=owner)
+        today.ending_balance = today.balance
+        today.save()
+
+    def _get_starting_balance(self):
+        automatic = self.transactions.filter(automatic=True)
+        expenses = self._sum(automatic.filter(type='3'))
+        incomes = self._sum(automatic.filter(type='4'))
+        return incomes - expenses
 
     def _sum(self, queryset):
         return queryset.aggregate(total=Sum('amount'))['total'] or 0
@@ -101,13 +115,6 @@ class DailyLedger(models.Model):
     @property
     def deposits(self):
         return self._sum(self.transactions.filter(type='4'))
-
-    @property
-    def starting_balance(self):
-        automatic = self.transactions.filter(automatic=True)
-        expenses = self._sum(automatic.filter(type='3'))
-        incomes = self._sum(automatic.filter(type='4'))
-        return incomes - expenses
 
     @property
     def difference(self):
