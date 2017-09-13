@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth import views as auth_views
 from django.utils import timezone
 from django.views.generic import TemplateView
 
 from money.models import DailyLedger
+from money.utils import  week_range
 
 
 class HomeView(TemplateView):
@@ -15,23 +16,25 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(HomeView, self).get_context_data(**kwargs)
+        now = timezone.now()
         today = DailyLedger.objects.today() or DailyLedger.start_day(self.request.user)
         this_week = DailyLedger.objects.this_week(self.request.user)
         this_month = DailyLedger.objects.this_week(self.request.user)
         ctx['today'] = {
             'balance': today.balance,
             'transactions': today.transactions.count(),
-            'date': timezone.now().strftime("%l, %F the %j%S, %o")
+            'date': now.strftime("%B %d, %Y")
         }
+        start, end = week_range(now)
         ctx['this_week'] = {
             'balance': sum([l.balance for l in this_week]),
             'transactions': sum([l.transactions.count() for l in this_week]),
-            'date': ''
+            'date': '{} - {}'.format(start.strftime('%B %d'), end.strftime('%B %d'))
         }
         ctx['this_month'] = {
             'balance': sum([l.balance for l in this_month]),
             'transactions': sum([l.transactions.count() for l in this_month]),
-            'date': ''
+            'date': now.strftime('%B')
         }
         return ctx
 
