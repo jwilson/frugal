@@ -72,13 +72,13 @@ class DailyLedger(models.Model):
         today = DailyLedger.objects.create(owner=owner)
         incomes, expenses = 0, 0
         for expense in FixedAmount.objects.expenses():
-            tx = Transaction.objects.create(owner=owner, amount=expense.daily, automatic=True, type='3')
-            expenses += tx.amount
-            today.transactions.add(tx)
+            expenses += expense.daily
+            today.transactions.add(Transaction.objects.create(owner=owner, amount=expense.daily,
+                                                              automatic=True, type='3'))
         for income in FixedAmount.objects.income():
-            tx = Transaction.objects.create(owner=owner, amount=income.daily, automatic=True, type='4')
-            incomes += tx.amount
-            today.transactions.add(tx)
+            incomes += income.daily
+            today.transactions.add(Transaction.objects.create(owner=owner, amount=income.daily,
+                                                              automatic=True, type='4'))
         today.starting_balance = incomes - expenses
         today.save()
         return today

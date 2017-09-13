@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta
-
 from django.contrib.auth import views as auth_views
 from django.utils import timezone
 from django.views.generic import TemplateView

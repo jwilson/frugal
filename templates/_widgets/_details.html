@@ -4,7 +4,7 @@
     <h4 class="card-title">{% block details-title %}{% endblock %}</h4>
     <h6 class="card-subtitle mb-2 text-muted">{{ data.date }}</h6>
     <div class="card-text">{{ data.transactions }} Transactions</div>
-    <div class="card-text text-danger">${{ data.balance }}</div>
+    <div class="card-text text-{% if data.balance < 0 %}danger{% else %}success{% endif %}">${{ data.balance }}</div>
     <br />
     <div class="text-center">
       <a href="{% block details-view-url %}{% endblock %}" class="btn btn-info">
