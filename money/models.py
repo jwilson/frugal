@@ -51,7 +51,7 @@ class DailyLedgerQuerySet(models.QuerySet):
         return self._filter(Q(created_on__range=week_range(timezone.now())), user=user)
 
     def today(self, user=None):
-        return self._filter(Q(created_on=timezone.now().date()), user=user)
+        return self._filter(Q(created_on=timezone.now().date()), user=user).first()
 
 
 @python_2_unicode_compatible
@@ -68,32 +68,30 @@ class DailyLedger(models.Model):
 
     @classmethod
     def start_day(cls, owner):
+        DailyLedger.end_day(owner)
         today = DailyLedger.objects.create(owner=owner)
+        incomes, expenses = 0, 0
         for expense in FixedAmount.objects.expenses():
-            today.transactions.add(Transaction.objects.create(owner=owner, amount=expense.daily,
-                                                              automatic=True, type='3'))
+            tx = Transaction.objects.create(owner=owner, amount=expense.daily, automatic=True, type='3')
+            expenses += tx.amount
+            today.transactions.add(tx)
         for income in FixedAmount.objects.income():
-            today.transactions.add(Transaction.objects.create(owner=owner, amount=income.daily,
-                                                              automatic=True, type='4'))
-
-        today.starting_balance = self._get_starting_balance()
+            tx = Transaction.objects.create(owner=owner, amount=income.daily, automatic=True, type='4')
+            incomes += tx.amount
+            today.transactions.add(tx)
+        today.starting_balance = incomes - expenses
         today.save()
-
         return today
 
     @classmethod
-    def ending_day_balance(cls, owner):
-        today = DailyLedger.objects.today(owner=owner)
-        today.ending_balance = today.balance
-        today.save()
+    def end_day(cls, owner):
+        ledger = DailyLedger.objects.filter(owner=owner).order_by('-created_on').first()
+        if ledger:
+            ledger.ending_balance = ledger.balance
+            ledger.save()
 
-    def _get_starting_balance(self):
-        automatic = self.transactions.filter(automatic=True)
-        expenses = self._sum(automatic.filter(type='3'))
-        incomes = self._sum(automatic.filter(type='4'))
-        return incomes - expenses
-
-    def _sum(self, queryset):
+    @staticmethod
+    def _sum(queryset):
         return queryset.aggregate(total=Sum('amount'))['total'] or 0
 
     @property
@@ -102,19 +100,19 @@ class DailyLedger(models.Model):
 
     @property
     def purchases(self):
-        return self._sum(self.transactions.filter(type='1'))
+        return DailyLedger._sum(self.transactions.filter(type='1'))
 
     @property
     def payments(self):
-        return self._sum(self.transactions.filter(type='2'))
+        return DailyLedger._sum(self.transactions.filter(type='2'))
 
     @property
     def withdraws(self):
-        return self._sum(self.transactions.filter(type='3'))
+        return DailyLedger._sum(self.transactions.filter(type='3'))
 
     @property
     def deposits(self):
-        return self._sum(self.transactions.filter(type='4'))
+        return DailyLedger._sum(self.transactions.filter(type='4'))
 
     @property
     def difference(self):
