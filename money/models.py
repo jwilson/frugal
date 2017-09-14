@@ -24,15 +24,20 @@ FREQUENCY = (
 )
 
 FIXED_AMOUNT_TYPE = (
-    ('1', 'Expense'),
-    ('2', 'Income')
+    ('1', _('Expense')),
+    ('2', _('Income'))
 )
 
 TRANSACTION_TYPE = (
-    ('1', 'Purchase'),
-    ('2', 'Bill'),
-    ('3', 'Withdraw'),
-    ('4', 'Deposit'),
+    ('1', _('Purchase')),
+    ('2', _('Bill')),
+    ('3', _('Withdraw')),
+    ('4', _('Deposit')),
+)
+
+TRANSACTION_CURRENCY = (
+    ('1', _('Canadian (CAD)')),
+    ('2', _('American (USD)'))
 )
 
 
@@ -127,6 +132,7 @@ class Transaction(models.Model):
     automatic = models.BooleanField(default=False)
     amount = models.DecimalField(max_digits=7, decimal_places=2)
     ledger = models.ForeignKey(DailyLedger, related_name='transactions', blank=True, null=True)
+    currency = models.CharField(max_length=1, choices=TRANSACTION_CURRENCY, default='1')
 
     def __str__(self):
         return '{} @ {}'.format(self.amount, self.ledger)

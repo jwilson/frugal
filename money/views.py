@@ -57,7 +57,7 @@ class TodaysTransactionsListView(TransactionsListBaseView):
 class TransactionCreateView(CreateView):
     model = Transaction
     form = TransactionForm
-    fields = ('type', 'amount')
+    fields = ('type', 'currency', 'amount')
     success_url = reverse_lazy('home')
     template_name = 'money/transactions_create.html'
 

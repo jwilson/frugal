@@ -5,6 +5,7 @@
       {% csrf_token %}
       {{ form.ledge }}
       {% include "_forms/_select.html" with field=form.type size="lg" %}
+      {% include "_forms/_select.html" with field=form.currency size="lg" %}
       {% include "_forms/_input.html" with field=form.amount size="lg" focus="true" %}
       {% trans 'Spend It' as spend %}
       <div class="float-right">
