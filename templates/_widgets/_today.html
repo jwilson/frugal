@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block details-button-label %}
-{% blocktrans %}Today{% endblocktrans %}
+{#{% blocktrans %}Today{% endblocktrans %}#}
 {% endblock %}
 
 {% block details-view-url %}
@@ -14,6 +14,8 @@
 {% endblock %}
 
 {% block details-add %}
-<a href="{% url "money:transactions_create" %}" class="btn btn-primary">
-        <span class="oi oi-plus"></span> {% trans "Transaction" %}</a>
+<br />
+<a href="{% url "money:transactions_create" %}" class="btn btn-lg btn-link">
+        <span class="oi oi-plus"></span> {% trans "Add" %}
+</a>
 {% endblock %}

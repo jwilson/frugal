@@ -3,13 +3,13 @@
 {% block title %}{% blocktrans %}Today's Transactions{% endblocktrans %}{% endblock %}
 {% block extrahead %}
   <style>
-    .amount {
-      font-size:1.0em;
-      font-weight:bold;
-    }
+    .amount { font-size:1.0em;font-weight:bold; }
+    div#back { margin:10px 0 10px 0; }
+    a#view { width: 75px; }
   </style>
 {% endblock %}
 {% block content %}
+  <a name="top"></a>
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">{% now "F j, o" %}</h4>
@@ -21,18 +21,21 @@
       <br />
       <div class="row">
         {% trans "Deposits" as deposits_label %}
-        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.deposits icon="arrow-circle-bottom" label=deposits_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with amount=ledger.deposits icon="arrow-circle-bottom text-success" label=deposits_label %}
         {% trans "Withdraws" as withdraws_label %}
-        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.withdraws icon="arrow-circle-top" label=withdraws_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with amount=ledger.withdraws icon="arrow-circle-top text-danger" label=withdraws_label %}
         {% trans "Payments" as payments_label %}
-        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.payments icon="calendar" label=payments_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with amount=ledger.payments icon="calendar text-danger" label=payments_label %}
         {% trans "Purchases" as purchases_label %}
-        {% include "_widgets/_transaction_list_summary_item.html" with deposits=ledger.purchases icon="dollar" label=purchases_label %}
+        {% include "_widgets/_transaction_list_summary_item.html" with amount=ledger.purchases icon="dollar text-danger" label=purchases_label %}
       </div>
       <br />
       <div class="row">
-        <div class="col-12 text-center"><a href="#" id="view" class="btn btn-sm btn-primary">
-          <span class="oi oi-eye"></span> {% blocktrans %}View transactions{% endblocktrans %}</a>
+        <div class="col-12 text-center">
+          <a href="#" id="view" class="btn btn-sm btn-primary">
+            <span class="oi oi-eye"></span>
+            <span id="view-label">{% blocktrans %}View{% endblocktrans %}</span>
+          </a>
         </div>
       </div>
     </div>
@@ -42,7 +45,7 @@
       <li class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1">
-            <span class="text-{% if tx.get_type_display == 'Withdraw' %}danger{% else %}success{% endif %}">{{ tx.amount }}</span>
+            <span class="text-{% if tx.type == '1' or tx.type == '3' or tx.type == '2' %}danger{% else %}success{% endif %}">{{ tx.amount }}</span>
           </h5>
           <small>{% if tx.automatic %}{% trans "Automatic" %} {% endif %}{{ tx.get_type_display }}</small>
         </div>
@@ -51,16 +54,23 @@
       {% endfor %}
     </ul>
   </div>
+  <div id="back" class="text-center d-none"><a href="#top">back to top</a></div>
 {% endblock %}
 {% block extrascript %}
   <script>
     function toggleTransactions() {
       const txs = document.querySelector('#transactions');
+      const back = document.querySelector('#back');
+      const label = document.querySelector('#view-label')
 
       if (txs.classList.contains('d-none')) {
-        txs.classList.remove('d-none')
+        txs.classList.remove('d-none');
+        back.classList.remove('d-none');
+        label.innerHTML = '{% trans "Hide" %}';
       } else {
-        txs.classList.add('d-none')
+        txs.classList.add('d-none');
+        back.classList.add('d-none');
+        label.innerHTML = '{% trans "View" %}';
       }
 
     };
