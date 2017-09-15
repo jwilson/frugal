@@ -1,0 +1,47 @@
+{% load i18n %}
+<div>
+  <canvas id="{{ id }}"></canvas>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', _ => {
+    setTimeout(_ => {
+      new Chart(document.getElementById('{{ id }}').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: [{% for ledger in ledgers %}
+            '{{ ledger.created_on|date:'M d' }}'{% if not forloop.last %},{% endif %}{% endfor %}
+          ],
+          datasets: [{
+            label: '',
+            data: [{% for ledger in ledgers %}
+              {x: '{{ ledger.created_on }}', y: {{ ledger.ending_balance }}}{% if not forloop.last %},{% endif %}{% endfor %}
+            ],
+            backgroundColor: [{% for ledger in ledgers %}
+              "rgba({% if ledger.ending_balance >= 0 %}40, 167, 69, 0.2{% else %}220, 53, 69, 0.2{% endif %})"{% if not forloop.last %},{% endif %}{% endfor %}
+            ],
+            borderColor: [{% for ledger in ledgers %}
+              "rgb({% if ledger.ending_balance >= 0 %}40, 167, 69{% else %}220, 53, 69{% endif %})"{% if not forloop.last %},{% endif %}{% endfor %}
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: '{{ chart_label }}'
+          },
+          scales: {
+            yAxes:[{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    }, 1);
+  });
+</script>

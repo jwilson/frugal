@@ -29,6 +29,7 @@
         {% trans "Purchases" as purchases_label %}
         {% include "_widgets/_transaction_list_summary_item.html" with amount=ledger.purchases icon="dollar text-danger" label=purchases_label %}
       </div>
+      {% include '_widgets/_chart.html' with id=id %}
       <br />
       <div class="row">
         <div class="col-12 text-center">
@@ -45,7 +46,7 @@
       <li class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1">
-            <span class="text-{% if tx.type == '1' or tx.type == '3' or tx.type == '2' %}danger{% else %}success{% endif %}">{{ tx.amount }}</span>
+            <span class="text-{% if tx.type == '4' %}success{% else %}danger{% endif %}">{{ tx.amount }}</span>
           </h5>
           <small>{% if tx.automatic %}{% trans "Automatic" %} {% endif %}{{ tx.get_type_display }}</small>
         </div>
@@ -58,10 +59,10 @@
 {% endblock %}
 {% block extrascript %}
   <script>
-    function toggleTransactions() {
-      const txs = document.querySelector('#transactions');
-      const back = document.querySelector('#back');
-      const label = document.querySelector('#view-label')
+    toggleTransactions = () => {
+      const txs = document.getElementById('transactions');
+      const back = document.getElementById('back');
+      const label = document.getElementById('view-label');
 
       if (txs.classList.contains('d-none')) {
         txs.classList.remove('d-none');
@@ -72,11 +73,10 @@
         back.classList.add('d-none');
         label.innerHTML = '{% trans "View" %}';
       }
-
     };
 
     document.addEventListener("DOMContentLoaded", _ => {
-      let view = document.querySelector('#view');
+      const view = document.getElementById('view');
       view.addEventListener('click', (e) => {
         e.preventDefault();
         toggleTransactions();
