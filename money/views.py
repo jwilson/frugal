@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 import uuid
 
-from datetime import timedelta
+from datetime import datetime
+from dateutils import relativedelta
 
+from django.db.models import Sum
 from django.views.generic import CreateView, ListView
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -40,9 +42,6 @@ class TransactionsListBaseView(ListView):
         ctx['id'] = str.replace(str(uuid.uuid4()), '-', '')
         return ctx
 
-    def get_ledger_data(self, ledgers):
-        return [{'created_on': l.created_on, 'ending_balance': l.ending_balance} for l in ledgers]
-
 
 class ThisMonthsTransactionsListView(TransactionsListBaseView):
     template_name = 'money/transactions.html'
@@ -53,6 +52,15 @@ class ThisMonthsTransactionsListView(TransactionsListBaseView):
     def get_context_data(self, **kwargs):
         ctx = super(ThisMonthsTransactionsListView, self).get_context_data(**kwargs)
         ctx['chart_label'] = _('Previous 7 Months')
+        ctx['ledgers'] = []
+        for i in reversed(range(1, 8)):
+            now = timezone.now()
+            start = now - relativedelta(months=i)
+            ledgers = (DailyLedger
+                       .objects
+                       .filter(created_on__month=start.month, owner=self.request.user))
+            ctx['ledgers'].append({'start': start.strftime('%B'),
+                                   'balance': ledgers.aggregate(total=Sum('ending_balance'))['total'] or 0})
         return ctx
 
 
@@ -65,6 +73,17 @@ class ThisWeeksTransactionsListView(TransactionsListBaseView):
     def get_context_data(self, **kwargs):
         ctx = super(ThisWeeksTransactionsListView, self).get_context_data(**kwargs)
         ctx['chart_label'] = _('Previous 7 Weeks')
+        ctx['ledgers'] = []
+        for i in reversed(range(1, 8)):
+            now = timezone.now()
+            start = now - relativedelta(days=now.weekday() + 1, weeks=i)
+            end = start + relativedelta(days=6)
+            ledgers = (DailyLedger
+                       .objects
+                       .filter(created_on__range=(start, end), owner=self.request.user))
+            ctx['ledgers'].append({'start': start.strftime('%b %d'),
+                                   'balance': ledgers.aggregate(total=Sum('ending_balance'))['total'] or 0})
+        print ctx['ledgers']
         return ctx
 
 
@@ -76,17 +95,14 @@ class TodaysTransactionsListView(TransactionsListBaseView):
 
     def get_context_data(self, **kwargs):
         ctx = super(TodaysTransactionsListView, self).get_context_data(**kwargs)
-        now = timezone.now()
-        start, end = week_range(now)
-        delta = timedelta(days=7 - (now.weekday() + 1))
-        start = start - delta
-        end = end - delta
+        ctx['chart_label'] = _('Previous 7 Days')
+        end = timezone.now() - relativedelta(days=1)
+        start = end - relativedelta(days=7)
         ledgers = (DailyLedger
                    .objects
                    .filter(created_on__range=(start, end), owner=self.request.user)
                    .order_by('created_on'))
-        ctx['ledgers'] = self.get_ledger_data(ledgers)
-        ctx['chart_label'] = _('Previous 7 Days')
+        ctx['ledgers'] = [{'start': l.created_on.strftime('%b %d'), 'balance': l.ending_balance or 0} for l in ledgers]
         return ctx
 
 

@@ -9,18 +9,18 @@
         type: 'bar',
         data: {
           labels: [{% for ledger in ledgers %}
-            '{{ ledger.created_on|date:'M d' }}'{% if not forloop.last %},{% endif %}{% endfor %}
+            '{{ ledger.start }}'{% if not forloop.last %},{% endif %}{% endfor %}
           ],
           datasets: [{
             label: '',
             data: [{% for ledger in ledgers %}
-              {{ ledger.ending_balance }}{% if not forloop.last %},{% endif %}{% endfor %}
+              {{ ledger.balance }}{% if not forloop.last %},{% endif %}{% endfor %}
             ],
             backgroundColor: [{% for ledger in ledgers %}
-              "rgba({% if ledger.ending_balance >= 0 %}40, 167, 69, 0.2{% else %}220, 53, 69, 0.2{% endif %})"{% if not forloop.last %},{% endif %}{% endfor %}
+              "rgba({% if ledger.balance >= 0 %}40, 167, 69, 0.2{% else %}220, 53, 69, 0.2{% endif %})"{% if not forloop.last %},{% endif %}{% endfor %}
             ],
             borderColor: [{% for ledger in ledgers %}
-              "rgb({% if ledger.ending_balance >= 0 %}40, 167, 69{% else %}220, 53, 69{% endif %})"{% if not forloop.last %},{% endif %}{% endfor %}
+              "rgb({% if ledger.balance >= 0 %}40, 167, 69{% else %}220, 53, 69{% endif %})"{% if not forloop.last %},{% endif %}{% endfor %}
             ],
             borderWidth: 1
           }]
