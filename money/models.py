@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
 from uuid import uuid4
 
 from django.contrib.auth.models import User
@@ -71,9 +72,12 @@ class DailyLedger(models.Model):
         return '{}'.format(self.created_on)
 
     @classmethod
-    def start_day(cls, owner):
+    def start_day(cls, owner, date=None):
         DailyLedger.end_day(owner)
-        today = DailyLedger.objects.create(owner=owner)
+        if date:
+            today = DailyLedger.objects.create(owner=owner, created_on=date)
+        else:
+            today = DailyLedger.objects.create(owner=owner)
         incomes, expenses = 0, 0
         for expense in FixedAmount.objects.expenses():
             expenses += expense.daily

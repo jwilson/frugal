@@ -1,9 +1,9 @@
 <div class="form-group">
   <label class="form-control-label" for="id_{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}">
     {% if field %}{{ field.name|capfirst }}{% else %}{{ label|capfirst }}{% endif %}</label>
-  <div class="input-group date" data-provide="datepicker" data-date-format="mm/dd/yyyy">
+  <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
     <input type="text" class="form-control {% if size %}form-control-{{ size }}{% endif %}"
-           value="{% if field %}{{ field.value }}{% else %}{% if value %}{{ value }}{% else %}{% now 'SHORT_DATE_FORMAT' %}{% endif %}{% endif %}"
+           value="{% if field %}{{ field.value }}{% else %}{% if value %}{{ value }}{% else %}{% now 'd/m/Y' %}{% endif %}{% endif %}"
            name="{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}"
            id="id_{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}"
            readonly>

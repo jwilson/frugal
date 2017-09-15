@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import uuid
 
+from datetime import datetime
 from dateutils import relativedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -115,7 +116,13 @@ class TransactionCreateView(CreateView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        instance.ledger = DailyLedger.objects.today() or DailyLedger.start_day(self.request.user)
+        if self.request.POST.get('occurred_at', '') != str(timezone.now().date()):
+            instance.ledger = (DailyLedger
+                               .objects
+                               .filter(created_on=datetime.strptime(self.request.POST.get('occurred_at'), '%d/%m/%Y'))
+                               .first()) or DailyLedger.start_day(self.request.user, date=timezone.now().date())
+        else:
+            instance.ledger = DailyLedger.objects.today() or DailyLedger.start_day(self.request.user)
         instance.owner = self.request.user
         instance.save()
         return super(TransactionCreateView, self).form_valid(form)
