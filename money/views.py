@@ -5,6 +5,7 @@ import uuid
 
 from dateutils import relativedelta
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.views.generic import CreateView, ListView
 from django.urls import reverse_lazy
@@ -20,8 +21,10 @@ class FixedAmountsView(ListView):
     template_name = 'money/fixed_amount_list.html'
 
 
-class TransactionsListBaseView(ListView):
+class TransactionsListBaseView(LoginRequiredMixin, ListView):
     model = Transaction
+    login_url = '/login/'
+    redirect_field_name = 'goto'
 
     def get_transaction_data(self):
         return {
@@ -49,9 +52,9 @@ class ThisMonthsTransactionsListView(TransactionsListBaseView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ThisMonthsTransactionsListView, self).get_context_data(**kwargs)
-        ctx['chart_label'] = _('Previous 7 Months')
+        ctx['chart_label'] = _('Previous 5 Months')
         ctx['ledgers'] = []
-        for i in reversed(range(1, 8)):
+        for i in reversed(range(1, 6)):
             now = timezone.now()
             start = now - relativedelta(months=i)
             ledgers = (DailyLedger
@@ -70,9 +73,9 @@ class ThisWeeksTransactionsListView(TransactionsListBaseView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ThisWeeksTransactionsListView, self).get_context_data(**kwargs)
-        ctx['chart_label'] = _('Previous 7 Weeks')
+        ctx['chart_label'] = _('Previous 5 Weeks')
         ctx['ledgers'] = []
-        for i in reversed(range(1, 8)):
+        for i in reversed(range(1, 6)):
             now = timezone.now()
             start = now - relativedelta(days=now.weekday() + 1, weeks=i)
             end = start + relativedelta(days=6)
@@ -92,9 +95,9 @@ class TodaysTransactionsListView(TransactionsListBaseView):
 
     def get_context_data(self, **kwargs):
         ctx = super(TodaysTransactionsListView, self).get_context_data(**kwargs)
-        ctx['chart_label'] = _('Previous 7 Days')
+        ctx['chart_label'] = _('Previous 5 Days')
         end = timezone.now() - relativedelta(days=1)
-        start = end - relativedelta(days=7)
+        start = end - relativedelta(days=5)
         ledgers = (DailyLedger
                    .objects
                    .filter(created_on__range=(start, end), owner=self.request.user)

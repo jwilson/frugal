@@ -7,6 +7,7 @@ from .views import HomeView, LoginView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', LoginView.as_view(), name='login'),
+    url(r'^logout/$', LoginView.as_view(), name='logout'),
 
     url(r'^', include('money.urls', namespace='money')),
 
