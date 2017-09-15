@@ -40,8 +40,8 @@ class TransactionsListBaseView(ListView):
         ctx['id'] = str.replace(str(uuid.uuid4()), '-', '')
         return ctx
 
-    def parse_ledger_data(self, ledgers):
-        pass
+    def get_ledger_data(self, ledgers):
+        return [{'created_on': l.created_on, 'ending_balance': l.ending_balance} for l in ledgers]
 
 
 class ThisMonthsTransactionsListView(TransactionsListBaseView):
@@ -85,7 +85,7 @@ class TodaysTransactionsListView(TransactionsListBaseView):
                    .objects
                    .filter(created_on__range=(start, end), owner=self.request.user)
                    .order_by('created_on'))
-        ctx['ledgers'] = ledgers
+        ctx['ledgers'] = self.get_ledger_data(ledgers)
         ctx['chart_label'] = _('Previous 7 Days')
         return ctx
 

@@ -14,7 +14,7 @@
           datasets: [{
             label: '',
             data: [{% for ledger in ledgers %}
-              {x: '{{ ledger.created_on }}', y: {{ ledger.ending_balance }}}{% if not forloop.last %},{% endif %}{% endfor %}
+              {{ ledger.ending_balance }}{% if not forloop.last %},{% endif %}{% endfor %}
             ],
             backgroundColor: [{% for ledger in ledgers %}
               "rgba({% if ledger.ending_balance >= 0 %}40, 167, 69, 0.2{% else %}220, 53, 69, 0.2{% endif %})"{% if not forloop.last %},{% endif %}{% endfor %}
