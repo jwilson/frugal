@@ -83,7 +83,6 @@ class ThisWeeksTransactionsListView(TransactionsListBaseView):
                        .filter(created_on__range=(start, end), owner=self.request.user))
             ctx['ledgers'].append({'start': start.strftime('%b %d'),
                                    'balance': ledgers.aggregate(total=Sum('ending_balance'))['total'] or 0})
-        print ctx['ledgers']
         return ctx
 
 
