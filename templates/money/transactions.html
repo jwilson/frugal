@@ -15,7 +15,7 @@
       <h4 class="card-title">{% now "F j, o" %}</h4>
       <h6 class="card-subtitle mb-2 text-muted">
         {% blocktrans with balance=ledger.balance difference=ledger.difference class=ledger.difference|get_difference_class %}
-          Balance: ${{ balance }} <span class="text-{{ class }}">({{ difference}})</span>
+          Balance: ${{ balance }} (<span class="text-{{ class }}">{{ difference }}</span>)
         {% endblocktrans %}
       </h6>
       <br />

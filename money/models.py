@@ -62,8 +62,8 @@ class DailyLedgerQuerySet(models.QuerySet):
 class DailyLedger(models.Model):
     owner = models.ForeignKey(User, related_name='daily_ledgers')
     created_on = models.DateField(auto_now_add=True)
-    starting_balance = models.IntegerField(blank=True, null=True)
-    ending_balance = models.IntegerField(blank=True, null=True)
+    starting_balance = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
+    ending_balance = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
 
     objects = DailyLedgerQuerySet.as_manager()
 
@@ -120,7 +120,7 @@ class DailyLedger(models.Model):
 
     @property
     def difference(self):
-        return self.balance - self.starting_balance
+        return self.balance - (self.starting_balance or 0)
 
 
 @python_2_unicode_compatible

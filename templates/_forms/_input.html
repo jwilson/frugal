@@ -4,5 +4,6 @@
   <input type="{{ type|default:"text" }}" class="form-control{%  if size %} form-control-{{ size }}{% endif %}"
          id="id_{{ field.name }}" name="{{ field.name }}"
          placeholder="{% blocktrans with name=field.name %}Enter the {{ name }}...{% endblocktrans %}"
-         {% if focus %}autofocus{% endif %}/>
+         {% if focus %}autofocus{% endif %}
+         {% if not autocomplete %}autocomplete="off"{% endif %}/>
 </div>

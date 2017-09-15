@@ -5,7 +5,8 @@
     <input type="text" class="form-control {% if size %}form-control-{{ size }}{% endif %}"
            value="{% if field %}{{ field.value }}{% else %}{% if value %}{{ value }}{% else %}{% now 'SHORT_DATE_FORMAT' %}{% endif %}{% endif %}"
            name="{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}"
-           id="id_{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}">
+           id="id_{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}"
+           readonly>
     <div class="input-group-addon">
       <span class="oi oi-calendar"></span>
     </div>
