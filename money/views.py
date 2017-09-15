@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import uuid
 
-from datetime import datetime
 from dateutils import relativedelta
 
 from django.db.models import Sum
@@ -14,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from .models import DailyLedger, FixedAmount, Transaction
 from .forms import TransactionForm
-from .utils import week_range
 
 
 class FixedAmountsView(ListView):
