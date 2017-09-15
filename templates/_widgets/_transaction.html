@@ -4,6 +4,8 @@
     <form action="{{ action|default:"." }}" method="post">
       {% csrf_token %}
       {{ form.ledge }}
+      {% trans "Occured At" as occurred %}
+      {% include "_forms/_datepicker.html" with name="occured_at" label=occurred size="lg" %}
       {% include "_forms/_select.html" with field=form.type size="lg" %}
       {% include "_forms/_select.html" with field=form.currency size="lg" %}
       {% include "_forms/_input.html" with field=form.amount size="lg" focus="true" %}

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}NO TITLE{% endblock %} | frugal?</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap-4.0.0-beta.min.css' %}">
-    <link rel="stylesheet" href="{%  static 'css/open-iconic-1.1.1.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/open-iconic-1.1.1.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3-1.7.1.min.css' %}">
     <style>
       html { font-size: 0.85em; }
       @include media-breakpoint-up(sm) { html { font-size: 0.9em; } }
@@ -47,6 +48,7 @@
     <script src="{% static 'js/popper-1.11.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap-4.0.0-beta.min.js' %}"></script>
     <script src="{% static 'js/chartjs-2.7.0.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker-1.7.1.min.js' %}"></script>
     {% block extrascript %}
     {% endblock %}
   </body>
