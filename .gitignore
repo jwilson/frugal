@@ -3,3 +3,4 @@
 *.sqlite3
 .DS_Store
 local_settings.py
+static/CACHE
