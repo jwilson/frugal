@@ -10,7 +10,9 @@
   <a name="top"></a>
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">{% now "F j, o" %}</h4>
+      <h5 class="card-title">
+        {% if period_label %}{{ period_label }}{% else  %}{% now "F j, o" %}{% endif %}
+      </h5>
       <h6 class="card-subtitle mb-2 text-muted">
         {% blocktrans with balance=ledger.balance difference=ledger.difference class=ledger.difference|get_difference_class %}
           Balance: ${{ balance }} (<span class="text-{{ class }}">{{ difference }}</span>)

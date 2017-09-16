@@ -1,12 +1,9 @@
 {% load i18n %}
 <div class="card">
-  <div class="card-header">
+  <div class="card-body">
     <a href="{% block details-view-url %}{% endblock %}" class="btn btn-sm btn-link float-right">
         <span class="oi oi-graph"></span> {% block details-button-label %}{% endblock %}</a>
-    <h6 class="card-title" style="margin-top:6px;">{% block details-title %}{% endblock %}</h6>
-  </div>
-  <div class="card-body">
-
+    <h5 class="card-title" style="margin-top:6px;">{% block details-title %}{% endblock %}</h5>
     <div class="card-text">{{ data.transactions }} Transactions</div>
     <div class="card-text text-{% if data.balance < 0 %}danger{% else %}success{% endif %}">${{ data.balance }}</div>
     <div class="text-center">

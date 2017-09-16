@@ -62,6 +62,7 @@ class ThisMonthsTransactionsListView(TransactionsListBaseView):
     def get_context_data(self, **kwargs):
         ctx = super(ThisMonthsTransactionsListView, self).get_context_data(**kwargs)
         ctx['chart_label'] = _('Previous 5 Months')
+        ctx['period_label'] = _('This Month')
         ctx['ledgers'] = []
         for i in reversed(range(1, 6)):
             now = timezone.now()
@@ -83,6 +84,7 @@ class ThisWeeksTransactionsListView(TransactionsListBaseView):
     def get_context_data(self, **kwargs):
         ctx = super(ThisWeeksTransactionsListView, self).get_context_data(**kwargs)
         ctx['chart_label'] = _('Previous 5 Weeks')
+        ctx['period_label'] = _('This Week')
         ctx['ledgers'] = []
         for i in reversed(range(1, 6)):
             now = timezone.now()
