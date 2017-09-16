@@ -1,10 +1,11 @@
-{% load i18n static %}
+{% load i18n static compress %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}NO TITLE{% endblock %} | frugal?</title>
+    {% compress css %}
     <link rel="stylesheet" href="{% static 'css/bootstrap-4.0.0-beta.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/open-iconic-1.1.1.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3-1.7.1.min.css' %}">
@@ -15,8 +16,9 @@
       @include media-breakpoint-up(lg) { html { font-size: 1.0em; } }
       @include media-breakpoint-up(xl) { html { font-size: 1.1em; } }
       body { padding-top:15px; }
-      div#branding { margin-left:62px; }
+      a#branding { margin-left:62px;text-decoration:none; }
     </style>
+    {% endcompress %}
     {% block extrahead %}
     {% endblock %}
   </head>
@@ -28,27 +30,34 @@
           <a href="{% url 'logout' %}" class="btn btn-link">
             <span class="oi oi-lock-locked"></span>
           </a>
-          <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <button type="button" class="btn btn-link dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="/admin/" class="dropdown-item" type="button">
-              <span class="oi oi-cog"></span> {% trans "Administration" %}</a>
+            <a href="{% url 'money:fixed_amounts' %}" class="dropdown-item">
+              <span class="oi oi-calculator"></span> {% blocktrans %}Fixed Amounts{% endblocktrans %}</a>
+            {% if request.user.is_staff %}
+            <div class="dropdown-divider"></div>
+            <a href="/admin/" class="dropdown-item">
+              <span class="oi oi-cog"></span> {% trans "Administration" %}</a>{% endif %}
           </div>
         </div>
         {% else %}
           <a class="btn btn-link float-right" href="{% url 'login' %}"><span class="oi oi-lock-unlocked"></span></a>
         {% endif %}
-        <div id="branding">
+        <a href="{% url 'home' %}" id="branding" class="text-dark">
           <span class="oi oi-task"></span> {% blocktrans %}frugal?{% endblocktrans %}
-        </div>
+        </a>
         </h2>
       {% block content %}
       {% endblock %}
     </div>
+    {% compress js %}
     <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
     <script src="{% static 'js/popper-1.11.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap-4.0.0-beta.min.js' %}"></script>
     <script src="{% static 'js/chartjs-2.7.0.bundle.min.js' %}"></script>
     <script src="{% static 'js/bootstrap-datepicker-1.7.1.min.js' %}"></script>
+    {% endcompress %}
     {% block extrascript %}
     {% endblock %}
   </body>

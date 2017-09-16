@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <table class="table table-sm table-striped table-inverse">
+    <tr>
+      <th>Label</th>
+      <th>Amount</th>
+      <th></th>
+    </tr>
+    {% for expense in object_list %}
+    <tr>
+      <td>{{ expense.label }}</td>
+      <td><span class="text-{% if expense.type == '1' %}danger{% else %}success{% endif %}">${{ expense.amount }}</span></td>
+      <td>{{ expense.get_frequency_display }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

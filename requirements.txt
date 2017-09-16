@@ -1,2 +1,4 @@
 dateutils
 Django
+django_compressor
+csscompressor

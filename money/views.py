@@ -19,7 +19,7 @@ from .forms import FixedAmountForm, TransactionForm
 
 class FixedAmountsView(ListView):
     model = FixedAmount
-    template_name = 'money/fixed_amount_list.html'
+    template_name = 'money/fixedamounts.html'
 
 
 class FixedAmountCreateView(CreateView):
