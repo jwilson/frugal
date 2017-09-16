@@ -6,8 +6,9 @@
       <span class="oi oi-{{ icon }}"></span>
     </div>
     <input type="text" class="form-control {% if size %}form-control-{{ size }}{% endif %}{% if field.errors %} border-danger{% endif %}"
-           value="{% if field %}{{ field.value }}{% else %}{% if value %}{{ value }}{% else %}{% now 'd/m/Y' %}{% endif %}{% endif %}"
+           value="{% if field and field.value %}{{ field.value }}{% else %}{% if value %}{{ value }}{% endif %}{% endif %}"
            name="{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}"
-           id="id_{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}">
+           id="id_{% if field %}{{ field.name }}{% else %}{{ name }}{% endif %}"
+           {% if not autocomplete %}autocomplete="off"{% endif %}>
   </div>
 </div>

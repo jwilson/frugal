@@ -3,8 +3,8 @@
   <label class="form-control-label" for="id_{{ field.name }}">{{ field.name|capfirst }}</label>
   <input type="{{ type|default:"text" }}"
          class="form-control{%  if size %} form-control-{{ size }}{% endif %}{% if field.errors %} border-danger{% endif %}"
-         id="id_{{ field.name }}" name="{{ field.name }}"
+         id="id_{{ field.name }}" name="{{ field.name }}" value="{{ field.value }}"
          placeholder="{% blocktrans with name=field.name %}Enter the {{ name }}...{% endblocktrans %}"
          {% if focus %}autofocus{% endif %}
-         {% if not autocomplete %}autocomplete="off"{% endif %}/>
+         {% if not autocomplete %}autocomplete="off"{% endif %} />
 </div>
