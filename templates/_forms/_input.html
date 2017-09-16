@@ -1,7 +1,8 @@
 {% load i18n %}
 <div class="form-group">
   <label class="form-control-label" for="id_{{ field.name }}">{{ field.name|capfirst }}</label>
-  <input type="{{ type|default:"text" }}" class="form-control{%  if size %} form-control-{{ size }}{% endif %}"
+  <input type="{{ type|default:"text" }}"
+         class="form-control{%  if size %} form-control-{{ size }}{% endif %}{% if field.errors %} border-danger{% endif %}"
          id="id_{{ field.name }}" name="{{ field.name }}"
          placeholder="{% blocktrans with name=field.name %}Enter the {{ name }}...{% endblocktrans %}"
          {% if focus %}autofocus{% endif %}

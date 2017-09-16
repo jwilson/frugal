@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth import views as auth_views
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView
 
@@ -40,3 +41,7 @@ class HomeView(TemplateView):
 
 class LoginView(auth_views.LoginView):
     template_name = 'home.html'
+
+
+class LogoutView(auth_views.LogoutView):
+    next_page = '/login/'

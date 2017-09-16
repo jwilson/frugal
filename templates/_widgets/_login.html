@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="card">
   <div class="card-body">
-    <h4 class="card-title">Login</h4>
+    <h4 class="card-title">{% blocktrans %}Hi, please login{% endblocktrans %}</h4>
     <form action="{% url "login" %}?next={% url "home" %}" method="post">
       {% csrf_token %}
       {% include "_forms/_input.html" with field=form.username size="lg" %}

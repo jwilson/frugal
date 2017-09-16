@@ -1,5 +1,5 @@
 {% load i18n %}
 {% trans "Click Me" as click_me %}
 <button type="submit" class="btn {% if size %}btn-{{ size }}{% endif %} btn-{{ type|default:"default" }}">
-  {% if icon %}<span class="{{ icon }}"></span> {% endif %}{{ text|default:click_me }}
+  {% if icon %}<span class="oi oi-{{ icon }}"></span> {% endif %}{{ text|default:click_me }}
 </button>

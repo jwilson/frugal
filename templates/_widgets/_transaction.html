@@ -7,10 +7,11 @@
       {% include "_forms/_datepicker.html" with name="occurred_at" label=occurred size="lg" %}
       {% include "_forms/_select.html" with field=form.type size="lg" %}
       {% include "_forms/_select.html" with field=form.currency size="lg" %}
-      {% include "_forms/_input.html" with field=form.amount size="lg" focus="true" %}
-      {% trans "Spend It" as spend %}
+{#      {% include "_forms/_input.html" with field=form.amount size="lg" focus="true" %}#}
+      {% include "_forms/_input-group.html" with field=form.amount icon="dollar" size="lg" focus="true" %}
+      {% trans "Spend It!" as spend %}
       <div class="float-right">
-        {% include "_forms/_button.html" with type="danger" icon="" text=spend size="lg" %}
+        {% include "_forms/_button.html" with type="outline-info" icon="cart" text=spend size="lg" %}
       </div>
     </form>
   </div>

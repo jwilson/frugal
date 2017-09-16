@@ -11,7 +11,6 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from .utils import week_range
 
 FREQUENCY = (
     ('1', _('Weekly')),
