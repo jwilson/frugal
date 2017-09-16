@@ -91,11 +91,8 @@ class ThisWeeksTransactionsListView(TransactionsListBaseView):
             ledgers = (DailyLedger
                        .objects
                        .filter(created_on__range=(start, end), owner=self.request.user))
-            print ledgers
-            print ledgers.aggregate(total=Sum('ending_balance'))
             ctx['ledgers'].append({'start': start.strftime('%b %d'),
                                    'balance': ledgers.aggregate(total=Sum('ending_balance'))['total'] or 0})
-        print ctx['ledgers']
         return ctx
 
 
@@ -127,10 +124,7 @@ class TransactionCreateView(CreateView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        print self.request.POST.get('occurred_at', '')
-        print timezone.now().date().strftime('%d/%m/%Y')
         if self.request.POST.get('occurred_at', '') != timezone.now().date().strftime('%d/%m/%Y'):
-            print 'find day'
             date = datetime.strptime(self.request.POST.get('occurred_at'), '%d/%m/%Y')
             instance.ledger = (DailyLedger
                                .objects
@@ -138,9 +132,7 @@ class TransactionCreateView(CreateView):
                                .first()) or DailyLedger.start_day(self.request.user, date=date)
             instance.ledger.ending_balance = instance.ledger.balance
             instance.ledger.save()
-            print instance.ledger
         else:
-            print 'today or new day'
             instance.ledger = DailyLedger.objects.today() or DailyLedger.start_day(self.request.user)
         instance.owner = self.request.user
         instance.save()
