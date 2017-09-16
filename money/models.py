@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
+from dateutils import relativedelta
 from uuid import uuid4
 
 from django.contrib.auth.models import User
@@ -53,7 +53,10 @@ class DailyLedgerQuerySet(models.QuerySet):
         return self._filter(Q(created_on__month=timezone.now().month), user=user)
 
     def this_week(self, user=None):
-        return self._filter(Q(created_on__range=week_range(timezone.now())), user=user)
+        now = timezone.now()
+        start = now - relativedelta(days=now.weekday() + 1)
+        end = start + relativedelta(days=6)
+        return self._filter(Q(created_on__range=(start, end)), user=user)
 
     def today(self, user=None):
         return self._filter(Q(created_on=timezone.now().date()), user=user).first()
@@ -62,7 +65,7 @@ class DailyLedgerQuerySet(models.QuerySet):
 @python_2_unicode_compatible
 class DailyLedger(models.Model):
     owner = models.ForeignKey(User, related_name='daily_ledgers')
-    created_on = models.DateField(auto_now_add=True)
+    created_on = models.DateField()
     starting_balance = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     ending_balance = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
 
@@ -74,10 +77,8 @@ class DailyLedger(models.Model):
     @classmethod
     def start_day(cls, owner, date=None):
         DailyLedger.end_day(owner)
-        if date:
-            today = DailyLedger.objects.create(owner=owner, created_on=date)
-        else:
-            today = DailyLedger.objects.create(owner=owner)
+        date = date or timezone.now().date()
+        today = DailyLedger.objects.create(owner=owner, created_on=date)
         incomes, expenses = 0, 0
         for expense in FixedAmount.objects.expenses():
             expenses += expense.daily

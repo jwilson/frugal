@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.conf.urls import url
 
-from .views import FixedAmountsView, ThisMonthsTransactionsListView, ThisWeeksTransactionsListView, \
-    TodaysTransactionsListView, TransactionCreateView
+from .views import FixedAmountsView, FixedAmountCreateView, ThisMonthsTransactionsListView, \
+    ThisWeeksTransactionsListView, TodaysTransactionsListView, TransactionCreateView
 
 urlpatterns = [
     url(r'^transactions/new/$', TransactionCreateView.as_view(), name='transactions_create'),
@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^transactions/weekly/$', ThisWeeksTransactionsListView.as_view(), name='transactions_weekly'),
     url(r'^transactions/today/$', TodaysTransactionsListView.as_view(), name='transactions_today'),
     url(r'^transactions/$', TodaysTransactionsListView.as_view(), name='transactions_today'),
+    url(r'^fixed-amounts/new/$', FixedAmountCreateView.as_view(), name='fixed_amounts_create'),
     url(r'^fixed-amounts/$', FixedAmountsView.as_view(), name='fixed_amounts')
 ]
